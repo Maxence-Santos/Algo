@@ -35,13 +35,15 @@ int main() {
     fscanf(fichier, "%d", &ligne);
     int i = ligne;//3;
     int *V = (int *)malloc(i * sizeof(int));
-    /*for (int j = 0; j < i; j++) {
-        V[j] = j + 1;
-    }*/
-    V[0] = 3;
-    V[1] = 5;
-    V[2] = 20;
-    //int r = m(s, i, V);
+    fscanf(fichier, "%d", &ligne);
+    V[0] = ligne;
+    printf("V[0] : %d\n", V[0]);
+    fscanf(fichier, "%d", &ligne);
+    V[1] = ligne;
+    printf("V[1] : %d\n", V[1]);
+    fscanf(fichier, "%d", &ligne);
+    V[2] = ligne;
+    printf("V[2] : %d\n", V[2]);
     printf("S : %d\n", s);
     printf("i : %d\n", i);
     printf("m(s, i) : %d\n", m(s, i, V));
