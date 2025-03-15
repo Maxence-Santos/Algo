@@ -36,17 +36,23 @@ bool test_glouton_compatible(int k, int* V) {
 }
 
 int main() {
-    int S = 6;
-    int k = 3;
-    int* V = (int *)malloc(k * sizeof(int));
-    /*for (int j=0;j<k;j++) {
-        V[j] = j+1;
-    }*/
-    V[0] = 1;
-    V[1] = 3;
-    V[2] = 4;
-    
-    if (test_glouton_compatible(k,V)) {
+    FILE *fichier;
+    fichier = fopen("donnees.txt", "r");
+    int ligne;
+    fscanf(fichier, "%d", &ligne);
+    int s = ligne;
+    fscanf(fichier, "%d", &ligne);
+    int i = ligne;
+    int *V = (int *)malloc(i * sizeof(int));
+    for (int j = 0; j < i; j++) {
+        fscanf(fichier, "%d", &ligne);
+        V[j] = ligne;
+
+    }
+    for (int j = 0; j < i; j++) {
+        printf("V[%d] : %d\n", j, V[j]);
+    }
+    if (test_glouton_compatible(i,V)) {
         printf("Le test est compatible\n");
     }
     else {
