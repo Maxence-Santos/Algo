@@ -3,7 +3,8 @@
 #include <stdio.h>
 
 int algo_glouton(int s, int k, int* V) {
-    int* A = (int *)malloc(k * sizeof(int));
+    int A[k];
+    int somme = 0;
     for (int j=0;j<k;j++) {
         A[j] = 0;
     }
@@ -11,16 +12,21 @@ int algo_glouton(int s, int k, int* V) {
     int i = k-1;
     while (s1 != 0) {
         A[i] = s1/V[i];
+        somme += A[i];
         s1 -= A[i]*V[i];
         i--;
     }
-    return A[k-1];
+    for (int j=0;j<k;j++) {
+        printf("A[%d] : %d\n", j, A[j]);
+    }
+
+    return somme;
 }
 
 bool test_glouton_compatible(int k, int* V) {
     if (k >= 3) {
-        for (int i=V[3]+2;i<V[k-1]+V[k];i++) {
-            for (int j=1;j<k+1;j++) {
+        for (int i=V[2]+2;i<V[k-2]+V[k-1];i++) {
+            for (int j=0;j<k;j++) {
                 if ((V[j] < i) && (algo_glouton(i,k,V)>1+algo_glouton(i-V[j],k,V))) {
                     return false;
                 }
