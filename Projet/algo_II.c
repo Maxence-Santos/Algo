@@ -11,15 +11,25 @@ int minimum(int a, int b) {
 }
 
 int main() {
-    int s = 5;
-    int i = 2;
+    FILE *fichier;
+    fichier = fopen("donnees.txt", "r");
+    int ligne;
+    fscanf(fichier, "%d", &ligne);
+    int s = ligne;
+    fscanf(fichier, "%d", &ligne);
+    int i = ligne;
+    int *V = (int *)malloc(i * sizeof(int));
+    for (int j = 0; j < i; j++) {
+        fscanf(fichier, "%d", &ligne);
+        V[j] = ligne;
+
+    }
+    for (int j = 0; j < i; j++) {
+        printf("V[%d] : %d\n", j, V[j]);
+    }
     int **T = (int **)malloc(s+1 * sizeof(int*));
     for (int j=0;j<s+1;j++) {
         T[j] = (int *)malloc(i+1 * sizeof(int));
-    }
-    int *V = (int *)malloc(i * sizeof(int));
-    for (int j=0;j<i;j++) {
-        V[j] = j+1;
     }
     int min1 = 0;
     int min2 = 0;
@@ -47,11 +57,11 @@ int main() {
     for (int j=0;j<i1;j++) {
         A[j] = 0;
     }
-    printf("vvev");
     while (s1 != 0 && i1 != 0) {
         if (T[s1][i1] != T[s1][i1-1]) {
             A[i1]++;
-            s1 -= V[i1];
+            s1 -= V[i1-1];
+            printf("bgf"); 
         }
         else {
             i1--;
