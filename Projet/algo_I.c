@@ -27,16 +27,25 @@ int m(int s, int i, int *V) {
 }
 
 int main() {
-    int s = 5;
-    int i = 2;
+    FILE *fichier;
+    fichier = fopen("donnees.txt", "r");
+    int ligne;
+    fscanf(fichier, "%d", &ligne);
+    int s = ligne;//151;
+    fscanf(fichier, "%d", &ligne);
+    int i = ligne;//3;
     int *V = (int *)malloc(i * sizeof(int));
-    for (int j = 0; j < i; j++) {
+    /*for (int j = 0; j < i; j++) {
         V[j] = j + 1;
-    }
+    }*/
+    V[0] = 3;
+    V[1] = 5;
+    V[2] = 20;
     //int r = m(s, i, V);
     printf("S : %d\n", s);
     printf("i : %d\n", i);
     printf("m(s, i) : %d\n", m(s, i, V));
     free(V); // Libérer la mémoire allouée
+    fclose(fichier);
     return 0;
 }
