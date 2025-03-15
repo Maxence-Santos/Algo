@@ -8,25 +8,20 @@ int algo_glouton(int s, int k, int* V) {
         A[j] = 0;
     }
     int s1 = s;
-    int i = k;
-    /*for (int i=s;i>=0;i--) {
-        A[i] = s1/V[i];
-        printf("vgdhh");
-        s1 -= A[i]*V[i];
-    }*/
+    int i = k-1;
     while (s1 != 0) {
         A[i] = s1/V[i];
         s1 -= A[i]*V[i];
         i--;
     }
-    return A[k];
+    return A[k-1];
 }
 
 bool test_glouton_compatible(int k, int* V) {
     if (k >= 3) {
-        for (int i=V[3]+2;i<V[k-1]+V[k]-1;i++) {
-            for (int j=0;j<k;j++) {
-                if (V[j] < i && algo_glouton(i,k,V)>1+algo_glouton(i-V[j],k,V)) {
+        for (int i=V[3]+2;i<V[k-1]+V[k];i++) {
+            for (int j=1;j<k+1;j++) {
+                if ((V[j] < i) && (algo_glouton(i,k,V)>1+algo_glouton(i-V[j],k,V))) {
                     return false;
                 }
             }
@@ -58,5 +53,8 @@ int main() {
     else {
         printf("Le test n'est pas compatible\n");
     }
+    printf("Algo glouton : %d\n", algo_glouton(s, i, V));
+    free(V); // Libérer la mémoire allouée
+    fclose(fichier);
     return 0;
 }
