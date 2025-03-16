@@ -5,84 +5,77 @@
 #include <time.h>
 
 int minimum(int a, int b) {
-    if (a<b) {
-        return a;
-    }
-    return b;
+    return (a < b) ? a : b;
 }
 
-int algo2(int s, int i, int* V) {
-    int **T = (int **)malloc((s+1) * sizeof(int*));
-    for (int j=0;j<s+1;j++) {
-        T[j] = (int *)malloc((i+1) * sizeof(int));
-    }
-    for (int j = 0; j < i; j++) {
-        printf("V[%d] : %d\n", j, V[j]);
+int algo2(int somme, int taille, int* valeurs) {
+    int **tableau = (int **)malloc((somme + 1) * sizeof(int*));
+    for (int j = 0; j <= somme; j++) {
+        tableau[j] = (int *)malloc((taille + 1) * sizeof(int));
     }
 
-    int min1 = 0;
-    int min2 = 0;
-    for (int j=0;j<s+1;j++) {
-        for (int k=0;k<i+1;k++) {
-            T[j][k] = INT_MAX;
+    for (int j = 0; j <= somme; j++) {
+        for (int k = 0; k <= taille; k++) {
+            tableau[j][k] = INT_MAX;
         }
     }
-    for (int j=0;j<i+1;j++) {
-        T[0][j] = 0;
+    for (int j = 0; j <= taille; j++) {
+        tableau[0][j] = 0;
     }
 
-    for (int j=1;j<s+1;j++) {
-        for (int k=1;k<i+1;k++) {
-            if (j-V[k-1] < 0) {
-                min1 = INT_MAX;
-            }
-            else {
-                min1 = T[j-V[k-1]][k]+1;
-            }
-            min2 = T[j][k-1];
-            T[j][k] = minimum(min1,min2);
+    for (int j = 1; j <= somme; j++) {
+        for (int k = 1; k <= taille; k++) {
+            int min1 = (j - valeurs[k - 1] < 0) ? INT_MAX : tableau[j - valeurs[k - 1]][k] + 1;
+            int min2 = tableau[j][k - 1];
+            tableau[j][k] = minimum(min1, min2);
         }
     }
 
-    int s1 =s;
-    int i1 = i;
-    int* A = (int *)malloc(i1 * sizeof(int));
-    for (int j=0;j<i1;j++) {
-        A[j] = 0;
+    int somme1 = somme;
+    int taille1 = taille;
+    int* resultats = (int *)malloc(taille1 * sizeof(int));
+    for (int j = 0; j < taille1; j++) {
+        resultats[j] = 0;
     }
-    while (s1 != 0 && i1 != 0) {
-        if (T[s1][i1] != T[s1][i1-1]) {
-            A[i1-1]++;
-            s1 -= V[i1-1];
-        }
-        else {
-            i1--;
+    while (somme1 != 0 && taille1 != 0) {
+        if (tableau[somme1][taille1] != tableau[somme1][taille1 - 1]) {
+            resultats[taille1 - 1]++;
+            somme1 -= valeurs[taille1 - 1];
+        } else {
+            taille1--;
         }
     }
+    int resultat_final = tableau[somme][taille];
+    for (int j = 0; j <= somme; j++) {
+        free(tableau[j]);
+    }
+    free(tableau);
+    free(resultats);
+    return resultat_final;
 }
 
-int algo_glouton(int s, int k, int* V) {
-    int A[k];
-    for (int j=0;j<k;j++) {
-        A[j] = 0;
+int algo_glouton(int somme, int taille, int* valeurs) {
+    int resultats[taille];
+    for (int j = 0; j < taille; j++) {
+        resultats[j] = 0;
     }
-    int s1 = s;
-    int i = k-1;
-    int c = 0;
-    while (s1 != 0) {
-        A[i] = s1/V[i];
-        c += A[i];
-        s1 -= A[i]*V[i];
+    int somme1 = somme;
+    int i = taille - 1;
+    int compteur = 0;
+    while (somme1 != 0) {
+        resultats[i] = somme1 / valeurs[i];
+        compteur += resultats[i];
+        somme1 -= resultats[i] * valeurs[i];
         i--;
     }
-    return c;
+    return compteur;
 }
 
-bool test_glouton_compatible(int k, int* V) {
-    if (k >= 3) {
-        for (int i=V[2]+2;i<V[k-2]+V[k-1];i++) {
-            for (int j=0;j<k;j++) {
-                if ((V[j] < i) && (algo_glouton(i,k,V)>1+algo_glouton(i-V[j],k,V))) {
+bool test_glouton_compatible(int taille, int* valeurs) {
+    if (taille >= 3) {
+        for (int i = valeurs[2] + 2; i < valeurs[taille - 2] + valeurs[taille - 1]; i++) {
+            for (int j = 0; j < taille; j++) {
+                if ((valeurs[j] < i) && (algo_glouton(i, taille, valeurs) > 1 + algo_glouton(i - valeurs[j], taille, valeurs))) {
                     return false;
                 }
             }
@@ -92,35 +85,56 @@ bool test_glouton_compatible(int k, int* V) {
 }
 
 int main() {
-    int s = 50;
+    int somme = 50;
     srand(time(NULL));
     int p_max = 20;
-    int a;
-    int i = 50;
-    int *V = (int *)malloc(i * sizeof(int));
+    int facteur = 5; //  facteur pour determiner les valeurs de S
+    int temp;
+    int taille = 50;
+    int *valeurs = (int *)malloc(taille * sizeof(int));
     
-    int c=0;
-    int d=0;
-    for (int m=0;m<500;m++) {
-        V[0] = 1;
-        for (int j = 1; j < i; j++) {
-            V[j] = rand()%(p_max) + 1;
-            while (j>0 && V[j] < V[j-1]) {
-                a = V[j];
-                V[j] = V[j-1];
-                V[j-1] = a;
+    int total_ecart = 0;
+    int count_ecart = 0;
+    int pire_ecart = 0;
+    int total_systemes = 0;
+    int non_glouton_compatible = 0;
+
+    for (int m = 0; m < 500; m++) {
+        valeurs[0] = 1;
+        for (int j = 1; j < taille; j++) {
+            valeurs[j] = rand() % (p_max) + 1;
+            while (j > 0 && valeurs[j] < valeurs[j - 1]) {
+                temp = valeurs[j];
+                valeurs[j] = valeurs[j - 1];
+                valeurs[j - 1] = temp;
                 j--;
             }
-        }
-        /*// Afficher le tableau généré
-        for (int j = 0; j < i; j++) {
-            printf("V[%d] : %d\n", j, V[j]);
-        }*/
-        if (!test_glouton_compatible(i,V)) {
-            
-        }        
+        }  
+        total_systemes++;
+        if (!test_glouton_compatible(taille, valeurs)) {
+            non_glouton_compatible++;
+            for (int somme = p_max; somme <= facteur * p_max; somme++) {
+                int ecart = abs(algo2(somme, taille, valeurs) - algo_glouton(somme, taille, valeurs));
+                total_ecart += ecart;
+                count_ecart++;
+                if (ecart > pire_ecart) {
+                    pire_ecart = ecart;
+                }
+            }
+        }    
     }
     
-    free(V);
+    if (count_ecart > 0) {
+        double ecart_moyen = (double)total_ecart / count_ecart;
+        printf("Écart moyen: %f\n", ecart_moyen);
+        printf("Pire écart: %d\n", pire_ecart);
+    } else {
+        printf("Aucun écart trouvé.\n");
+    }
+
+    printf("Total systèmes: %d\n", total_systemes);
+    printf("Systèmes non glouton compatibles: %d\n", non_glouton_compatible);
+
+    free(valeurs);
     return 0;
 }
