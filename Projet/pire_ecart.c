@@ -116,7 +116,7 @@ int main() {
         for (int j = 0; j < i; j++) {
             printf("V[%d] : %d\n", j, V[j]);
         }*/
-        if (test_glouton_compatible(i,V)) {
+        if (!test_glouton_compatible(i,V)) {
             
         }        
     }
