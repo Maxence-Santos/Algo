@@ -6,7 +6,7 @@ graph = 3 # choisir 1, 2 ou 3
 
 
 if graph == 1:
-    file_path = r'c:\Users\MATTHIEU\Documents\Cours\Informatique\C\TP confiture\resultats1.txt'
+    file_path = r'resultats1.txt'
     data = pd.read_csv(file_path, delim_whitespace=True)
     unique_d_values = data['d'].unique()
     num_graphs = min(3, len(unique_d_values))
@@ -30,7 +30,7 @@ if graph == 1:
     plt.tight_layout()
     plt.show()
 elif graph == 2:
-    file_path = r'c:\Users\MATTHIEU\Documents\Cours\Informatique\C\TP confiture\resultats2.txt'
+    file_path = r'resultats2.txt'
     data = pd.read_csv(file_path, delim_whitespace=True)
     unique_d_values = data['d'].unique()
     num_graphs = min(3, len(unique_d_values))
@@ -54,7 +54,7 @@ elif graph == 2:
     plt.tight_layout()
     plt.show()
 else:
-    file_path = r'c:\Users\MATTHIEU\Documents\Cours\Informatique\C\TP confiture\resultats3.txt'
+    file_path = r'resultats3.txt'
     data = pd.read_csv(file_path, delim_whitespace=True)
     unique_d_values = data['d'].unique()
     num_graphs = min(3, len(unique_d_values))
