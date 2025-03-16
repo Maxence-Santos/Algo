@@ -35,31 +35,41 @@ bool test_glouton_compatible(int k, int* V) {
 }
 
 int main() {
-    int s = 20;
+    int s = 50;
     srand(time(NULL));
-    int r_max = 20;
+    int p_max = 20;
     int a;
-    int i = 5;
+    int i = 100;
     int *V = (int *)malloc(i * sizeof(int));
     V[0] = 1;
-    for (int j = 1; j < i-1; j++) {
-        V[j] = V[j-1] + rand()%(r_max/i) + 1;
-        while (V[j] < V[j-1]) {
+    for (int j = 1; j < i; j++) {
+        V[j] = rand()%(p_max) + 1;
+        while (j>0 && V[j] < V[j-1]) {
             a = V[j];
             V[j] = V[j-1];
             V[j-1] = a;
+            j--;
         }
     }
     // Afficher le tableau généré
     for (int j = 0; j < i; j++) {
         printf("V[%d] : %d\n", j, V[j]);
     }
-    if (test_glouton_compatible(i,V)) {
-        printf("Le test est compatible\n");
+    int c=0;
+    int d=0;
+    for (int m=0;m<100;m++) {
+        if (test_glouton_compatible(i,V)) {
+        //printf("Le test est compatible\n");
+            c++;
+        }
+        else {
+            //printf("Le test n'est pas compatible\n");
+            d++;
+        }
+    
     }
-    else {
-        printf("Le test n'est pas compatible\n");
-    }
+    printf("Nombre de tests compatibles : %d\n",c);
+    printf("Nombre de tests non compatibles : %d\n",d);
     free(V);
     return 0;
 }
